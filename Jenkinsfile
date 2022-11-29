@@ -1,6 +1,6 @@
 def mvn
 pipeline {
-    agent { any }
+    agent { label 'master' }
         tools {
             maven 'MAVEN'
             jdk 'JAVA'
