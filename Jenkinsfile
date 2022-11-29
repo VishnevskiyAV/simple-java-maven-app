@@ -15,7 +15,7 @@ pipeline {
                 script {
                         mvn= tool (name: 'MAVEN', type: 'maven') + '/bin/mvn'
                     }
-                        sh "${mvn} -B -DskipTests clean package"
+                        sh "${mvn} -B -DskipTests clean install"
                 }
             }
         stage('Test') {
