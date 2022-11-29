@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Docker Container Artifactory'){
             steps{
-                withCredentials([usernameColonPassword(credentialsId: 'docker_dileep_creds', variable: 'DOCKER_PASS')]) {
+                withCredentials([usernameColonPassword(credentialsId: 'docker-pass', variable: 'DOCKER_PASS')]) {
                 sh 'docker push vishnevskiyav/java-maven-app:$BUILD_NUMBER'
                 //sh 'docker run -d -p 8050:8050 --name JavaMavenApp vishnevskiyav/java-maven-app:$BUILD_NUMBER'
             }
