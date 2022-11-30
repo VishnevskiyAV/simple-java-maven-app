@@ -3,8 +3,8 @@ pipeline {
     agent any
         tools {
             maven 'MAVEN'
-            //jdk 'JAVA'
         }
+        
     environment {     
     DOCKERHUB_CREDENTIALS= credentials('docker-pass')     
     }
@@ -15,7 +15,7 @@ pipeline {
                 script {
                         mvn= tool (name: 'MAVEN', type: 'maven') + '/bin/mvn'
                     }
-                        sh "${mvn} -B -DskipTests clean package"
+                sh "${mvn} -B -DskipTests clean package"
                 }
             }
         stage('Test') {
@@ -31,6 +31,7 @@ pipeline {
         stage('Build Docker Image'){
             steps{
                 sh 'docker build -t vishnevskiyav/java-maven-app:$BUILD_NUMBER .'
+                echo 'Docker Build Completed'   
             }
         }
         stage('Login to Docker Hub') {      	
@@ -46,13 +47,6 @@ pipeline {
                 //sh 'docker run -d -p 8050:8050 --name JavaMavenApp vishnevskiyav/java-maven-app:$BUILD_NUMBER'
             }
         } 
-        stage('Deploy to AWS') {
-            steps {
-                withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                    sh './gradlew awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=$SUBNET_ID -PdockerHubUsername=$DOCKER_HUB_LOGIN_USR -Pregion=$AWS_REGION'
-                }
-            }
-        }
         stage('Cleanup') {
             steps {
                 echo 'Removing unused docker containers and images..'
